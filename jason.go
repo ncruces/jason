@@ -3,25 +3,25 @@ package jason
 
 import "encoding/json"
 
-// Object is a dynamic JSON object:
+// Object is a JSON object:
 // an unordered set of name/value pairs.
 //
-// Example of a JSON object literal:
-//   jason.Object{"abc": true}
-type Object = map[string]any
+// Example of an Object literal:
+//   jason.Object[bool]{"abc": true}
+type Object[T any] map[string]T
 
-// Array is a dynamic JSON array:
+// Array is a JSON array:
 // an ordered collection of values.
 //
-// Example of a JSON array literal:
-//   jason.Array{10, true}
-type Array = []any
+// Example of an Array literal:
+//   jason.Array[int]{1, 2, 3}
+type Array[T any] []T
 
 // Number is an encoded JSON number.
 //
 // It has arbitrary precision, and is easily converted to a float64 or int64.
 //
-// Example of a JSON number literal:
+// Example of a Number literal:
 //   jason.Number("10")
 type Number = json.Number
 
@@ -30,13 +30,13 @@ type Number = json.Number
 // Like [json.RawMessage], it implements [json.Marshaler] and [json.Unmarshaler]
 // and can be used to delay/precompute JSON decoding/encoding.
 //
-// Example of a JSON value literal:
+// Example of a Value literal:
 //   jason.Value("false")
 type Value []byte
 
-// From marshals v into a [Value], panics on error.
+// From marshals v into a Value, panics on error.
 //
-// Example:
+// Example of creating a Value from a time instant:
 //   jason.From(time.Now())
 func From(v any) Value {
 	b, err := json.Marshal(v)
@@ -48,7 +48,7 @@ func From(v any) Value {
 
 // To unmarshals j into a value of type T, panics on error.
 //
-// Example:
+// Example of converting j into a time instant:
 //   jason.To[time.Time](j)
 func To[T any](j Value) (v T) {
 	err := json.Unmarshal(j, &v)
@@ -60,7 +60,7 @@ func To[T any](j Value) (v T) {
 
 // Is checks if j can unmarshal into type T.
 //
-// Example:
+// Example of testing if j can be converted into a time instant:
 //   if jason.Is[time.Time](j) { ... }
 func Is[T any](j Value) bool {
 	_, err := Maybe[T](j)
@@ -69,8 +69,8 @@ func Is[T any](j Value) bool {
 
 // Maybe unmarshals j into a value of type T.
 //
-// Example:
-//   v, err = jason.Maybe[time.Time](j)
+// Example of converting j into a time instant:
+//   if v, err := jason.Maybe[time.Time](j); err == nil { ... }
 func Maybe[T any](j Value) (v T, err error) {
 	err = json.Unmarshal(j, &v)
 	return v, err
