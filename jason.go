@@ -100,3 +100,9 @@ func (j Value) String() string {
 func (j Value) GoString() string {
 	return "jason.Value(`" + j.String() + "`)"
 }
+
+// ValueObject is an Object of Value.
+type ValueObject = Object[Value]
+
+// ValueArray is an Array of Value.
+type ValueArray = Array[Value]
