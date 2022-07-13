@@ -26,20 +26,20 @@ type Array = []any
 //   jason.Number("10")
 type Number = json.Number
 
-// Raw is a raw encoded JSON value.
+// RawValue is a raw encoded JSON value.
 //
 // It implements [json.Marshaler] and [json.Unmarshaler],
 // and can be used to delay/precompute JSON decoding/encoding.
 //
-// Example of a Raw literal:
-//   jason.Raw("false")
-type Raw = json.RawMessage
+// Example of a RawValue literal:
+//   jason.RawValue("false")
+type RawValue = json.RawMessage
 
-// From marshals v into a Raw value, panics on error.
+// From marshals v into a RawValue, panics on error.
 //
-// Example of creating a Raw value from a time instant:
+// Example of creating a RawValue from a time instant:
 //   jason.From(time.Now())
-func From(v any) Raw {
+func From(v any) RawValue {
 	b, err := json.Marshal(v)
 	if err != nil {
 		panic(err)
@@ -51,7 +51,7 @@ func From(v any) Raw {
 //
 // Example of converting j into a time instant:
 //   jason.To[time.Time](j)
-func To[T any](j Raw) (v T) {
+func To[T any](j RawValue) (v T) {
 	err := json.Unmarshal(j, &v)
 	if err != nil {
 		panic(err)
@@ -63,7 +63,7 @@ func To[T any](j Raw) (v T) {
 //
 // Example of converting j into a time instant:
 //   if v, err := jason.Maybe[time.Time](j); err == nil { ... }
-func Maybe[T any](j Raw) (v T, err error) {
+func Maybe[T any](j RawValue) (v T, err error) {
 	err = json.Unmarshal(j, &v)
 	return v, err
 }
@@ -72,13 +72,13 @@ func Maybe[T any](j Raw) (v T, err error) {
 //
 // Example of testing whether j can be converted into a time instant:
 //   if jason.Is[time.Time](j) { ... }
-func Is[T any](j Raw) bool {
+func Is[T any](j RawValue) bool {
 	_, err := Maybe[T](j)
 	return err == nil
 }
 
-// RawObject is an object of Value's.
-type RawObject = map[string]Raw
+// RawObject is an object of RawValue's.
+type RawObject = map[string]RawValue
 
-// RawArray is an array of Value's.
-type RawArray = []Raw
+// RawArray is an array of RawValue's.
+type RawArray = []RawValue
