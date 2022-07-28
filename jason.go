@@ -47,11 +47,11 @@ func From(v any) RawValue {
 	return b
 }
 
-// To unmarshals j into a value of type T, panics on error.
+// ToA unmarshals j into a value of type T, panics on error.
 //
 // Example of converting j into a time instant:
-//   jason.To[time.Time](j)
-func To[T any](j RawValue) (v T) {
+//   jason.ToA[time.Time](j)
+func ToA[T any](j RawValue) (v T) {
 	err := json.Unmarshal(j, &v)
 	if err != nil {
 		panic(err)
@@ -59,21 +59,21 @@ func To[T any](j RawValue) (v T) {
 	return v
 }
 
-// Maybe unmarshals j into a value of type T.
+// AsA unmarshals j into a value of type T.
 //
 // Example of converting j into a time instant:
-//   if v, err := jason.Maybe[time.Time](j); err == nil { ... }
-func Maybe[T any](j RawValue) (v T, err error) {
+//   if v, err := jason.AsA[time.Time](j); err == nil { ... }
+func AsA[T any](j RawValue) (v T, err error) {
 	err = json.Unmarshal(j, &v)
 	return v, err
 }
 
-// Is checks whether j can be unmarshaled into type T.
+// IsA checks whether j can be unmarshaled into type T.
 //
 // Example of testing whether j can be converted into a time instant:
-//   if jason.Is[time.Time](j) { ... }
-func Is[T any](j RawValue) bool {
-	_, err := Maybe[T](j)
+//   if jason.IsA[time.Time](j) { ... }
+func IsA[T any](j RawValue) bool {
+	_, err := AsA[T](j)
 	return err == nil
 }
 
